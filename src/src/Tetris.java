@@ -114,7 +114,7 @@ public class Tetris extends JPanel {
     }
 
     /**
-     * 测试方法，测试旋转函数
+     * 测试，测试随机产生函数和旋转函数
      */
     static public void main(String... args) {
         boolean[][] SrcMap = Tetris.Shape[3];
@@ -126,7 +126,7 @@ public class Tetris extends JPanel {
     }
 
     /**
-     * 测试方法，显示矩阵
+     * 测试，显示矩阵[][]
      */
     static private void ShowMap(boolean[][] SrcMap) {
         System.out.println("-----");
@@ -140,17 +140,6 @@ public class Tetris extends JPanel {
             System.out.println();
         }
         System.out.println("-----");
-    }
-
-    public void SetMode(String mode) {
-        if (mode.equals("Auto")) {
-            AI tetris = new AI();
-            tetris.AIPlayer();
-            //TODO 在这里写ai算法的实现方法的模式选项
-        }
-        Tetris.Shape = Block_4.Shape;
-        this.Initial();
-        this.repaint();
     }
 
     /**

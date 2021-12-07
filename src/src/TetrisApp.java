@@ -4,8 +4,9 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 
 public class TetrisApp extends JFrame {
-
+    boolean aiMode = false;
     Tetris tetris = new Tetris();
+    //TODO 生成AI模式对象
 
     public TetrisApp() {
         this.setLocationRelativeTo(null);
@@ -36,14 +37,22 @@ public class TetrisApp extends JFrame {
         menu.add(gameMenu);
         menu.add(modeMenu);
         menu.add(helpMenu);
-
-        this.add(this.tetris);
-        this.tetris.setFocusable(true);
+        if (aiMode){
+            //TODO 让aiMode运行
+//            this.add(this.ai);
+//            this.ai.setFocusable(true);
+//            this.ai.AIPlayer();
+        }
+        else {
+            this.add(this.tetris);
+            this.tetris.setFocusable(true);
+        }
     }
 
     static public void main(String... args) {
         TetrisApp tetrisApp = new TetrisApp();
         tetrisApp.setVisible(true);
+        System.out.println("***********");
     }
 
     ActionListener NewGameAction = e -> TetrisApp.this.tetris.Initial();
@@ -56,7 +65,7 @@ public class TetrisApp extends JFrame {
 
     ActionListener AboutAction = e -> JOptionPane.showMessageDialog(TetrisApp.this, "Tetris Remake Ver 0.1.0", "关于", JOptionPane.WARNING_MESSAGE);
 
-    ActionListener v4Action = e -> TetrisApp.this.tetris.SetMode("Normal");
+    ActionListener v4Action = e -> aiMode = false;
 
-    ActionListener AIAction = e -> TetrisApp.this.tetris.SetMode("Auto");
+    ActionListener AIAction = e -> aiMode = true;
 }
