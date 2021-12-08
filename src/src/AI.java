@@ -1,5 +1,6 @@
 package src;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class AI extends Tetris {
@@ -12,11 +13,51 @@ public class AI extends Tetris {
     public int shift;    //左右平移
     public int evalScore;
 
+    public AI() {//TODO AI从这里运行 DEBUG NEEDED
+        this.Initial();
+        Timer timer = new Timer(AI.TimeDelay, this.TimerListener);
+        timer.start();
+        this.addKeyListener(this.KeyListener);
+        while (!IsTouch(NowBlockMap,NowBlockPos)) {
+            if (!IsPause) {
+                Point DesPoint;
+                switch (AIPlay()) {
+                    case ShiftRight -> {
+                        DesPoint = new Point(NowBlockPos.x, NowBlockPos.y + 1);
+                        if (!IsTouch(NowBlockMap, DesPoint)) {
+                            NowBlockPos = DesPoint;
+                        }
+                    }
+                    case ShiftLeft -> {
+                        DesPoint = new Point(NowBlockPos.x, NowBlockPos.y - 1);
+                        if (!IsTouch(NowBlockMap, DesPoint)) {
+                            NowBlockPos = DesPoint;
+                        }
+                    }
+                    case Drop -> {
+                        DesPoint = new Point(NowBlockPos.x, NowBlockPos.y);
+                        while (!IsTouch(NowBlockMap, DesPoint)) {
+                            DesPoint.y++;
+                        }
+                        DesPoint.y--;
+                        NowBlockPos = DesPoint;
+                    }
+                    case Rotate -> {
+                        boolean[][] TurnBlock = RotateBlock(NowBlockMap, 1);
+                        if (!IsTouch(TurnBlock, NowBlockPos)) {
+                            NowBlockMap = TurnBlock;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public boolean IsInitial() {
         return pieceX == BlockWidth / 2 && pieceY == BlockHeight - 1 && evalScore == 0;
     }
 
-    public PieceOperator AIPlay() {//TODO AIPlay类 s.t.该类可以实现下落方块的位置形状变化
+    public PieceOperator AIPlay() {
         if (IsInitial()) {
             boardInfo = new int[BlockWidth];
             for (int x = 0; x < BlockWidth; x++)
@@ -67,7 +108,7 @@ public class AI extends Tetris {
         return PieceOperator.Drop;
     }
 
-    private myPair [] DiffPos() {
+    private myPair[] DiffPos() {
         myPair[] posScore = new myPair[4];
         boolean[][] tmp = new boolean[4][4];
         boolean[][] evalPiece = new boolean[4][4];
@@ -379,40 +420,12 @@ public class AI extends Tetris {
         return (eliminated * usefulBlocks);
     }
 
-    public void AIPlayer() {
-        if (!IsPause) {
-            Point DesPoint;
-            switch (AIPlay()) {
-                case ShiftRight -> {
-                    DesPoint = new Point(NowBlockPos.x, NowBlockPos.y + 1);
-                    if (!IsTouch(NowBlockMap, DesPoint)) {
-                        NowBlockPos = DesPoint;
-                    }
-                }
-                case ShiftLeft -> {
-                    DesPoint = new Point(NowBlockPos.x, NowBlockPos.y - 1);
-                    if (!IsTouch(NowBlockMap, DesPoint)) {
-                        NowBlockPos = DesPoint;
-                    }
-                }
-                case Drop -> {
-                    DesPoint = new Point(NowBlockPos.x, NowBlockPos.y);
-                    while (!IsTouch(NowBlockMap, DesPoint)) {
-                        DesPoint.y++;
-                    }
-                    DesPoint.y--;
-                    NowBlockPos = DesPoint;
-                }
-            }
-        }
-    }
-
     public enum PieceOperator {
         ShiftLeft,
         ShiftRight,
         Rotate,
         Drop
-    }
+    }//执行动作的枚举选项：左移、右移、变形、直接下落
 
     public static class myPair {
         public int pairScore;
