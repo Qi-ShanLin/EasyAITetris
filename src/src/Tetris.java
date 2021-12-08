@@ -12,7 +12,7 @@ public class Tetris extends JPanel {
     public static final int BlockSize = 20;
     public static final int BlockWidth = 16;
     public static final int BlockHeight = 26;
-    private static final String[] AuthorInfo = {"Producer：", "QiShining", "https://space.bilibili.com/8903675", "https://github.com/Qi-ShanLin"};
+    private static final String[] AuthorInfo = {"Producer：", "QiShining", "https://space.bilibili.com/8903675", "https://github.com/Qi-ShanLin", "*方向键控制位移和下落", "*方向上键控制变形", "*空格键控制下落到底"};
     public static int TimeDelay = 1000;
     // 7种形状
     static boolean[][][] Shape = Block_4.Shape;
@@ -33,7 +33,6 @@ public class Tetris extends JPanel {
 
         @Override
         public void keyTyped(KeyEvent e) {
-
         }
 
         @Override
@@ -79,7 +78,8 @@ public class Tetris extends JPanel {
         }
 
         @Override
-        public void keyReleased(KeyEvent e) {}
+        public void keyReleased(KeyEvent e) {
+        }
     };
     // 分数
     private int Score = 0;
@@ -130,15 +130,15 @@ public class Tetris extends JPanel {
     /**
      * 判断正在下落的方块和墙、已经固定的方块是否有接触
      */
-    boolean IsTouch(boolean[][] SrcNextBlockMap, Point SrcNextBlockPos) {
-        for (int i = 0; i < SrcNextBlockMap.length; i++) {
-            for (int j = 0; j < SrcNextBlockMap[i].length; j++) {
-                if (SrcNextBlockMap[i][j]) {
-                    if (SrcNextBlockPos.y + i >= Tetris.BlockHeight || SrcNextBlockPos.x + j < 0 || SrcNextBlockPos.x + j >= Tetris.BlockWidth) {
+    boolean IsTouch(boolean[][] NextBlockMap, Point NextBlockPos) {
+        for (int i = 0; i < NextBlockMap.length; i++) {
+            for (int j = 0; j < NextBlockMap[i].length; j++) {
+                if (NextBlockMap[i][j]) {
+                    if (NextBlockPos.y + i >= Tetris.BlockHeight || NextBlockPos.x + j < 0 || NextBlockPos.x + j >= Tetris.BlockWidth) {
                         return true;
                     } else {
-                        if (SrcNextBlockPos.y + i >= 0) {
-                            if (this.BlockMap[SrcNextBlockPos.y + i][SrcNextBlockPos.x + j]) {
+                        if (NextBlockPos.y + i >= 0) {
+                            if (this.BlockMap[NextBlockPos.y + i][NextBlockPos.x + j]) {
                                 return true;
                             }
                         }
@@ -148,7 +148,6 @@ public class Tetris extends JPanel {
         }
         return false;
     }
-
     /**
      * 固定方块到地图
      */
@@ -156,24 +155,19 @@ public class Tetris extends JPanel {
         for (int i = 0; i < this.NowBlockMap.length; i++) {
             for (int j = 0; j < this.NowBlockMap[i].length; j++) {
                 if (this.NowBlockMap[i][j])
-                    if (this.NowBlockPos.y + i < 0)
-                        return false;
-                    else
-                        this.BlockMap[this.NowBlockPos.y + i][this.NowBlockPos.x + j] = this.NowBlockMap[i][j];
+                    if (this.NowBlockPos.y + i < 0) return false;
+                    else this.BlockMap[this.NowBlockPos.y + i][this.NowBlockPos.x + j] = this.NowBlockMap[i][j];
             }
         }
         return true;
     }
-
     /**
      * 计算新创建的方块的初始位置
-     *
      * @return 返回坐标
      */
     private Point CalNewBlockInitPos() {
         return new Point(Tetris.BlockWidth / 2 - this.NowBlockMap[0].length / 2, -this.NowBlockMap.length);
     }
-
     /**
      * 初始化
      */
@@ -203,9 +197,9 @@ public class Tetris extends JPanel {
         }
         this.repaint();
     }
-
     /**
      * 随机生成新方块状态
+     * @return 随机生成的新方块种类，并且能够输出到终端
      */
     private int CreateNewBlockState() {
         int Sum = Tetris.Shape.length * 4;
@@ -282,7 +276,7 @@ public class Tetris extends JPanel {
         }
         // 绘制分数信息、介绍信息
         g.drawString("游戏分数:" + this.Score, 365, 20);
-        g.drawString("下一个方块:",365,35);
+        g.drawString("下一个方块:", 365, 35);
         for (int i = 0; i < Tetris.AuthorInfo.length; i++) {
             g.drawString(Tetris.AuthorInfo[i], 380, 200 + i * 20);
         }
@@ -290,10 +284,10 @@ public class Tetris extends JPanel {
         //绘制暂停
         if (this.IsPause) {
             g.setColor(Color.white);
-            g.fillRect(140, 200, 50, 20);
+            g.fillRect(165, 200, 50, 20);
             g.setColor(Color.black);
-            g.drawRect(140, 200, 50, 20);
-            g.drawString("PAUSE", 145, 216);
+            g.drawRect(165, 200, 50, 20);
+            g.drawString("PAUSE", 170, 216);
         }
     }
 

@@ -9,6 +9,7 @@ public class TetrisApp extends JFrame {
 
     ActionListener NewGameAction = e -> TetrisApp.this.tetris.Initial();
     ActionListener PauseAction = e -> TetrisApp.this.tetris.SetPause(true);
+    ActionListener StartAction = e -> TetrisApp.this.tetris.SetPause(false);
     ActionListener ContinueAction = e -> TetrisApp.this.tetris.SetPause(false);
     ActionListener ExitAction = e -> System.exit(0);
     ActionListener AboutAction = e -> JOptionPane.showMessageDialog(TetrisApp.this, "Tetris Remake Ver 0.1.0", "关于", JOptionPane.WARNING_MESSAGE);
@@ -17,9 +18,9 @@ public class TetrisApp extends JFrame {
 
     public TetrisApp() {
 
-            this.add(this.tetris);
-            this.tetris.setFocusable(true);
-            System.out.println("PLAYER MODE SET");
+        this.add(this.tetris);
+        this.tetris.setFocusable(true);
+        System.out.println("PLAYER MODE SET");
 
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,7 +34,9 @@ public class TetrisApp extends JFrame {
         JMenuItem newGameItem = gameMenu.add("新游戏");
         newGameItem.addActionListener(this.NewGameAction);
         JMenuItem pauseItem = gameMenu.add("暂停");
+        JMenuItem startItem = gameMenu.add("开始");
         pauseItem.addActionListener(this.PauseAction);
+        startItem.addActionListener(this.StartAction);
         JMenuItem continueItem = gameMenu.add("继续");
         continueItem.addActionListener(this.ContinueAction);
         JMenuItem exitItem = gameMenu.add("退出");
@@ -55,5 +58,6 @@ public class TetrisApp extends JFrame {
         TetrisApp tetrisApp = new TetrisApp();
         tetrisApp.setVisible(true);
         System.out.println("***********");
-        }
+        tetrisApp.tetris.SetPause(true);
     }
+}

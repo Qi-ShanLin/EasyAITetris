@@ -13,11 +13,10 @@ public class AI extends Tetris {
     public int shift;    //左右平移
     public int evalScore;
 
-    public AI() {//TODO AI从这里运行 DEBUG NEEDED
+    public AI() throws InterruptedException, StackOverflowError{//TODO AI从这里运行 DEBUG NEEDED
         this.Initial();
         Timer timer = new Timer(AI.TimeDelay, this.TimerListener);
         timer.start();
-        this.addKeyListener(this.KeyListener);
         while (!IsTouch(NowBlockMap,NowBlockPos)) {
             if (!IsPause) {
                 Point DesPoint;
