@@ -114,35 +114,6 @@ public class Tetris extends JPanel {
     }
 
     /**
-     * 测试，测试随机产生函数和旋转函数
-     */
-    static public void main(String... args) {
-        boolean[][] SrcMap = Tetris.Shape[3];
-        Tetris.ShowMap(SrcMap);
-        Tetris tetris = new Tetris();
-        boolean[][] result = tetris.RotateBlock(SrcMap, 1);
-        Tetris.ShowMap(result);
-
-    }
-
-    /**
-     * 测试，显示矩阵[][]
-     */
-    static private void ShowMap(boolean[][] SrcMap) {
-        System.out.println("-----");
-        for (boolean[] booleans : SrcMap) {
-            for (boolean aBoolean : booleans) {
-                if (aBoolean)
-                    System.out.println("*");
-                else
-                    System.out.println(" ");
-            }
-            System.out.println();
-        }
-        System.out.println("-----");
-    }
-
-    /**
      * 新的方块落下时的初始化
      */
     private void getNextBlock() {
@@ -248,7 +219,7 @@ public class Tetris extends JPanel {
         return this.RotateBlock(Tetris.Shape[Shape], Arc);
     }
 
-    private boolean[][] RotateBlock(boolean[][] shape, int time) {
+    boolean[][] RotateBlock(boolean[][] shape, int time) {
         if (time == 0) {
             return shape;
         }
