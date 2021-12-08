@@ -1,6 +1,5 @@
 package src;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class AI extends Tetris {
@@ -13,39 +12,34 @@ public class AI extends Tetris {
     public int shift;    //左右平移
     public int evalScore;
 
-    public AI() throws InterruptedException, StackOverflowError{//TODO AI从这里运行 DEBUG NEEDED
-        this.Initial();
-        Timer timer = new Timer(AI.TimeDelay, this.TimerListener);
-        timer.start();
-        while (!IsTouch(NowBlockMap,NowBlockPos)) {
-            if (!IsPause) {
-                Point DesPoint;
-                switch (AIPlay()) {
-                    case ShiftRight -> {
-                        DesPoint = new Point(NowBlockPos.x, NowBlockPos.y + 1);
-                        if (!IsTouch(NowBlockMap, DesPoint)) {
-                            NowBlockPos = DesPoint;
-                        }
-                    }
-                    case ShiftLeft -> {
-                        DesPoint = new Point(NowBlockPos.x, NowBlockPos.y - 1);
-                        if (!IsTouch(NowBlockMap, DesPoint)) {
-                            NowBlockPos = DesPoint;
-                        }
-                    }
-                    case Drop -> {
-                        DesPoint = new Point(NowBlockPos.x, NowBlockPos.y);
-                        while (!IsTouch(NowBlockMap, DesPoint)) {
-                            DesPoint.y++;
-                        }
-                        DesPoint.y--;
+    public void AIRunner() throws StackOverflowError {//TODO AI方法， 可能要用到timer进行监听
+        while (!IsTouch(NowBlockMap, NowBlockPos)) {
+            Point DesPoint;
+            switch (AIPlay()) {
+                case ShiftRight -> {
+                    DesPoint = new Point(NowBlockPos.x, NowBlockPos.y + 1);
+                    if (!IsTouch(NowBlockMap, DesPoint)) {
                         NowBlockPos = DesPoint;
                     }
-                    case Rotate -> {
-                        boolean[][] TurnBlock = RotateBlock(NowBlockMap, 1);
-                        if (!IsTouch(TurnBlock, NowBlockPos)) {
-                            NowBlockMap = TurnBlock;
-                        }
+                }
+                case ShiftLeft -> {
+                    DesPoint = new Point(NowBlockPos.x, NowBlockPos.y - 1);
+                    if (!IsTouch(NowBlockMap, DesPoint)) {
+                        NowBlockPos = DesPoint;
+                    }
+                }
+                case Drop -> {
+                    DesPoint = new Point(NowBlockPos.x, NowBlockPos.y);
+                    while (!IsTouch(NowBlockMap, DesPoint)) {
+                        DesPoint.y++;
+                    }
+                    DesPoint.y--;
+                    NowBlockPos = DesPoint;
+                }
+                case Rotate -> {
+                    boolean[][] TurnBlock = RotateBlock(NowBlockMap, 1);
+                    if (!IsTouch(TurnBlock, NowBlockPos)) {
+                        NowBlockMap = TurnBlock;
                     }
                 }
             }
@@ -318,15 +312,15 @@ public class AI extends Tetris {
         int holes = 0;
         for (int x = 0; x < BlockWidth; x++) {
             int tmp = 0;
-            boolean upfilled = false;
+            boolean upFilled = false;
             for (int y = BlockHeight - 4 - 1; y >= 0; y--) {
                 //顶上未封
-                if ((!upfilled) && newBoard[y][x]) {
-                    upfilled = true;
+                if ((!upFilled) && newBoard[y][x]) {
+                    upFilled = true;
                     continue;
                 }
                 //顶部已封
-                if (upfilled && (!newBoard[y][x])) {
+                if (upFilled && (!newBoard[y][x])) {
                     tmp++;
                 }
             }

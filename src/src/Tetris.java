@@ -28,12 +28,9 @@ public class Tetris extends JPanel {
     public boolean[][] NowBlockMap;
     //是否暂停
     public boolean IsPause = false;
+    private boolean IsAuto = true;
     //按键监听器
     java.awt.event.KeyListener KeyListener = new java.awt.event.KeyListener() {
-
-        @Override
-        public void keyTyped(KeyEvent e) {
-        }
 
         @Override
         public void keyPressed(KeyEvent e) {
@@ -78,6 +75,10 @@ public class Tetris extends JPanel {
         }
 
         @Override
+        public void keyTyped(KeyEvent e) {
+        }
+
+        @Override
         public void keyReleased(KeyEvent e) {
         }
     };
@@ -106,11 +107,17 @@ public class Tetris extends JPanel {
         Tetris.this.repaint();
     };
 
-    public Tetris() {
+    public Tetris() {//TODO 实例ai方法
         this.Initial();
         timer = new Timer(Tetris.TimeDelay, this.TimerListener);
         timer.start();
         this.addKeyListener(this.KeyListener);
+        System.out.println("PLAYER MODE SET");
+        if (IsAuto) {
+            System.out.println("AUTO MODE SET");
+//            AI ai = new AI();
+//            ai.AIRunner();
+        }
     }
 
     /**
@@ -129,6 +136,7 @@ public class Tetris extends JPanel {
 
     /**
      * 判断正在下落的方块和墙、已经固定的方块是否有接触
+     * @return 下一时点是否会发生碰撞
      */
     boolean IsTouch(boolean[][] NextBlockMap, Point NextBlockPos) {
         for (int i = 0; i < NextBlockMap.length; i++) {
@@ -162,14 +170,14 @@ public class Tetris extends JPanel {
         return true;
     }
     /**
-     * 计算新创建的方块的初始位置
+     * 计算新创建的方块的初始位置,方便修改界面的时候保持居中下落
      * @return 返回坐标
      */
     private Point CalNewBlockInitPos() {
         return new Point(Tetris.BlockWidth / 2 - this.NowBlockMap[0].length / 2, -this.NowBlockMap.length);
     }
     /**
-     * 初始化
+     * 游戏的初始化，在切换模式和游戏开始时调用
      */
     public void Initial() {
         //清空Map
@@ -187,9 +195,12 @@ public class Tetris extends JPanel {
         this.NowBlockPos = this.CalNewBlockInitPos();
         this.repaint();
     }
-
-    public void SetPause(boolean value) {
-        this.IsPause = value;
+    public void SetMode(boolean flag){
+        this.IsAuto = flag;
+        if (this.IsAuto) this.timer.start();
+    }
+    public void SetPause(boolean flag) {
+        this.IsPause = flag;
         if (this.IsPause) {
             this.timer.stop();
         } else {
@@ -199,13 +210,18 @@ public class Tetris extends JPanel {
     }
     /**
      * 随机生成新方块状态
-     * @return 随机生成的新方块种类，并且能够输出到终端
+     * @return 调用随机类用来生成新方块种类，并且最终能够输出到Terminal
      */
     private int CreateNewBlockState() {
         int Sum = Tetris.Shape.length * 4;
         return ThreadLocalRandom.current().nextInt(0, 1000) % Sum;
     }
 
+    /**
+     *
+     * @param BlockState 为一随机int[0,28)
+     * @return 二维的方块数组
+     */
     private boolean[][] getBlockMap(int BlockState) {
         int Shape = BlockState / 4;
         int Arc = BlockState % 4;
@@ -213,6 +229,10 @@ public class Tetris extends JPanel {
         return this.RotateBlock(Tetris.Shape[Shape], Arc);
     }
 
+    /**
+     * 几种方块的旋转生成方法
+     * @return 旋转后的方块，用于初始化
+     */
     boolean[][] RotateBlock(boolean[][] shape, int time) {
         if (time == 0) {
             return shape;
