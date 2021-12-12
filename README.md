@@ -3,6 +3,6 @@
 
 ### TODOs
 
-// TODO debug AIRunner()方法
-// TODO 实现整个游戏中的最高分并进行记入txt，在重新启动时也能够显示
-// TODO 实现更多颜色的方块
+#### // TODO debug AIRunner()方法
+#### // TODO 实现整个游戏中的最高分并进行记入txt，在重新启动时也能够显示
+#### // TODO 实现更多颜色的方块
