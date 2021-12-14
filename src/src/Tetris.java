@@ -14,11 +14,9 @@ public class Tetris extends JPanel {
     public static final int BlockHeight = 26;
     private static final String[] AuthorInfo = {"Producer：", "QiShining", "https://space.bilibili.com/8903675", "https://github.com/Qi-ShanLin", "*方向键控制位移和下落", "*方向上键控制变形", "*空格键控制下落到底"};
     public static int TimeDelay = 1000;
-    // 7种形状
+    // 从Shape类中读取7种形状，用于随机生成
     static boolean[][][] Shape = Block_4.Shape;
-    /**
-     * 存放已经固定的方块
-     */
+    // 存放已经固定的方块
     public final boolean[][] BlockMap = new boolean[BlockHeight][BlockWidth];
     //timer
     private final Timer timer;
@@ -29,9 +27,8 @@ public class Tetris extends JPanel {
     //是否暂停
     public boolean IsPause = false;
     private boolean IsAuto = true;
-    //按键监听器
-    java.awt.event.KeyListener KeyListener = new java.awt.event.KeyListener() {
 
+    java.awt.event.KeyListener KeyListener = new java.awt.event.KeyListener() {
         @Override
         public void keyPressed(KeyEvent e) {
             if (!IsPause) {
@@ -72,7 +69,7 @@ public class Tetris extends JPanel {
                 }
                 repaint();
             }
-        }
+        }//按键监听器
 
         @Override
         public void keyTyped(KeyEvent e) {
@@ -115,8 +112,6 @@ public class Tetris extends JPanel {
         System.out.println("PLAYER MODE SET");
         if (IsAuto) {
             System.out.println("AUTO MODE SET");
-//            AI ai = new AI();
-//            ai.AIRunner();
         }
     }
 
@@ -261,7 +256,7 @@ public class Tetris extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // 画墙
+
         for (int i = 0; i < Tetris.BlockHeight + 1; i++) {
             g.drawRect(0, i * Tetris.BlockSize, Tetris.BlockSize, Tetris.BlockSize);
             g.drawRect((Tetris.BlockWidth + 1) * Tetris.BlockSize, i * Tetris.BlockSize, Tetris.BlockSize,
@@ -270,47 +265,50 @@ public class Tetris extends JPanel {
         for (int i = 0; i < Tetris.BlockWidth; i++) {
             g.drawRect((1 + i) * Tetris.BlockSize, Tetris.BlockHeight * Tetris.BlockSize, Tetris.BlockSize,
                     Tetris.BlockSize);
-        }
-        // 画当前方块
+        }// 绘制墙体
+
         for (int i = 0; i < this.NowBlockMap.length; i++) {
             for (int j = 0; j < this.NowBlockMap[i].length; j++) {
                 if (this.NowBlockMap[i][j])
                     g.fillRect((1 + this.NowBlockPos.x + j) * Tetris.BlockSize, (this.NowBlockPos.y + i) * Tetris.BlockSize,
                             Tetris.BlockSize, Tetris.BlockSize);
             }
-        }
-        // 画已经固定的方块
+        }// 绘制当前方块
+
         for (int i = 0; i < Tetris.BlockHeight; i++) {
             for (int j = 0; j < Tetris.BlockWidth; j++) {
                 if (this.BlockMap[i][j])
                     g.fillRect(Tetris.BlockSize + j * Tetris.BlockSize, i * Tetris.BlockSize, Tetris.BlockSize,
                             Tetris.BlockSize);
             }
-        }
-        //绘制下一个方块
+        }// 绘制已经固定好的方块
+
         for (int i = 0; i < this.NextBlockMap.length; i++) {
             for (int j = 0; j < this.NextBlockMap[i].length; j++) {
                 if (this.NextBlockMap[i][j])
                     g.fillRect(440 + j * Tetris.BlockSize, 80 + i * Tetris.BlockSize, Tetris.BlockSize, Tetris.BlockSize);
             }
-        }
-        // 绘制分数信息、介绍信息
+        }//绘制下一个方块
+
         g.drawString("游戏分数:" + this.Score, 365, 20);
         g.drawString("下一个方块:", 365, 35);
         for (int i = 0; i < Tetris.AuthorInfo.length; i++) {
             g.drawString(Tetris.AuthorInfo[i], 380, 200 + i * 20);
-        }
+        }// 绘制分数信息、作者介绍信息，中间空出高度放置下一个方块的大小
 
-        //绘制暂停
         if (this.IsPause) {
             g.setColor(Color.white);
             g.fillRect(165, 200, 50, 20);
             g.setColor(Color.black);
             g.drawRect(165, 200, 50, 20);
             g.drawString("PAUSE", 170, 216);
-        }
+        }//绘制暂停
     }
 
+    /**
+     * 清除成行的方块并累计行数
+     * @return 清除的行数
+     */
     private int ClearLines() {
         int lines = 0;
         for (int i = 0; i < this.BlockMap.length; i++) {

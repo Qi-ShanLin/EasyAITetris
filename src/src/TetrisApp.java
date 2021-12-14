@@ -11,8 +11,8 @@ public class TetrisApp extends JFrame {
     ActionListener ContinueAction = e -> TetrisApp.this.tetris.SetPause(false);
     ActionListener ExitAction = e -> System.exit(0);
     ActionListener AboutAction = e -> JOptionPane.showMessageDialog(TetrisApp.this, "Tetris Remake Ver 0.1.2", "关于", JOptionPane.WARNING_MESSAGE);
-    ActionListener v4Action = e -> TetrisApp.this.tetris.SetMode(false);
-    ActionListener AIAction = e -> TetrisApp.this.tetris.SetMode(true);
+    ActionListener NormalAction = e -> TetrisApp.this.tetris.SetMode(false);
+    ActionListener AIAction = e -> TetrisApp.this.tetris.SetMode(false);//未完成，避免操作产生bug始终设置为false
 
     public TetrisApp() {
 
@@ -38,7 +38,7 @@ public class TetrisApp extends JFrame {
         exitItem.addActionListener(this.ExitAction);
         JMenu modeMenu = new JMenu("模式");
         JMenuItem v4Item = modeMenu.add("正常");
-        v4Item.addActionListener(this.v4Action);
+        v4Item.addActionListener(this.NormalAction);
         JMenuItem AutoItem = modeMenu.add("Auto");
         AutoItem.addActionListener(this.AIAction);
         JMenu helpMenu = new JMenu("帮助");
